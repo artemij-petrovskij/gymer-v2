@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d221fb8"],{cd56:function(n,t,e){"use strict";e.r(t);var c=function(){var n=this,t=n.$createElement;n._self._c;return n._m(0)},s=[function(){var n=this,t=n.$createElement,e=n._self._c||t;return e("div",{staticClass:"home"},[e("img",{attrs:{alt:"Vue logo",src:"https://cdn-icons-png.flaticon.com/512/2307/2307918.png"}})])}],o={name:"Home",components:{}},a=o,l=e("2877"),r=Object(l["a"])(a,c,s,!1,null,null,null);t["default"]=r.exports}}]);
+//# sourceMappingURL=chunk-2d221fb8.f34689ed.js.map

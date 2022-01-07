@@ -1,4 +1,4 @@
-# client
+# GYMER-V2 (LITE)
 
 ## Project setup
 ```

@@ -28,19 +28,26 @@
             label="password"
             placeholder="password"
             type="password"
-            :rules="repeatpass"
+            
             solo
             dense
           ></v-text-field>
-          <v-btn block large color="success">Continue</v-btn>
+          <v-btn block large color="success" @click="checkPass">Continue</v-btn>
         </v-card-text>
       </v-card>
     </v-container>
+
+    <v-snackbar v-model="snackbar"> Пароли не совпадают </v-snackbar>
   </v-form>
 </template>
 <script>
 export default {
   data: () => ({
+    login: "",
+    password: "",
+    checkpass: "",
+    snackbar: false,
+
     rules: [
       (value) => !!value || "Required.",
       (value) => (value || "").length <= 40 || "Max 40 characters",
@@ -55,8 +62,15 @@ export default {
       (value) => (value || "").length <= 40 || "Max 40 characters",
       (value) => (value || "").length > 5 || "Min 5 characters",
     ],
-    repeatpass: [(value) => !!value || "Required."],
+
   }),
+  methods: {
+    checkPass() {
+      this.password === this.checkpass
+        ? console.log(true)
+        : (this.snackbar = true);
+    },
+  },
 };
 </script>
 <style lang="scss">

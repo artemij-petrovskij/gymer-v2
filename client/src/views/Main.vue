@@ -1,12 +1,9 @@
 <template>
-
-    <v-img
-      src="https://pngimg.com/uploads/powerlifting/powerlifting_PNG47.png"
-      max-height="400"
-      contain
-     
-    ></v-img>
-
+  <v-img
+    src="https://pngimg.com/uploads/powerlifting/powerlifting_PNG47.png"
+    max-height="400"
+    contain
+  ></v-img>
 </template>
 
 <script>
@@ -20,3 +17,4 @@ export default {
   },
 };
 </script>
+

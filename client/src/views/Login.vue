@@ -31,6 +31,8 @@
 <script>
 export default {
   data: () => ({
+    login:'',
+    password:'',
     loginRules: [
       (value) => !!value || "Required.",
       (value) => (value || "").length <= 40 || "Max 40 characters",

@@ -24,7 +24,7 @@
           ></v-text-field>
 
           <v-text-field
-            v-model="repeatpass"
+            v-model="checkpass"
             label="password"
             placeholder="password"
             type="password"

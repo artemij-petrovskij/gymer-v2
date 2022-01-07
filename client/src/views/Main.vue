@@ -1,7 +1,12 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="https://cdn-icons-png.flaticon.com/512/2307/2307918.png">
-  </div>
+
+    <v-img
+      src="https://pngimg.com/uploads/powerlifting/powerlifting_PNG47.png"
+      max-height="400"
+      contain
+     
+    ></v-img>
+
 </template>
 
 <script>
@@ -9,9 +14,9 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     // HelloWorld
-  }
-}
+  },
+};
 </script>

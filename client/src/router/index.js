@@ -13,19 +13,20 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
+    meta: { layout: 'dash' },
     component: () => import('../views/Dashboard.vue')
   },
   {
     path: '/login',
     name: 'login',
-
-    component: () => import('../components/Login.vue')
+    meta: { layout: 'empty' },
+    component: () => import('../views/Login.vue')
   },
   {
     path: '/signup',
     name: 'signup',
-
-    component: () => import('../components/Signup.vue')
+    meta: { layout: 'empty' },
+    component: () => import('../views/Signup.vue')
   }
 ]
 

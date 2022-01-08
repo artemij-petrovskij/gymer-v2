@@ -13,13 +13,15 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    meta: { layout: 'dash' },
+    meta: { layout: 'Dashboard', requiresAuth: true },
     component: () => import('../views/Dashboard.vue')
   },
   {
     path: '/login',
     name: 'login',
-    meta: { layout: 'empty' },
+    meta: {
+      layout: 'empty',
+    },
     component: () => import('../views/Login.vue')
   },
   {
@@ -34,6 +36,23 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('jwt') == null) {
+      next({
+        path: '/login',
+        params: { nextUrl: to.fullPath }
+      })
+    } else {
+
+      next()
+
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

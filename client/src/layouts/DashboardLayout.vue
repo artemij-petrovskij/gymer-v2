@@ -1,3 +1,3 @@
 <template>
-    <a href="">asdf</a>
+  <router-view> </router-view>
 </template>

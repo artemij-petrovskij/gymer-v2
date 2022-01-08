@@ -1,13 +1,16 @@
 <template>
-  <v-form>
+  <v-form ref="form" v-model="valid" lazy-validation autocomplete="on">
     <v-container>
       <v-card class="mx-auto" max-width="344" outlined>
         <v-card-text>
           <v-text-field
             v-model="login"
+            autocapitalize="off"
+            autocorrect="off"
+            autocomplete="username"
             label="Login"
             placeholder="Login"
-            :rules="rules"
+            :rules="loginRules"
             solo
             dense
             elebation="5"
@@ -15,10 +18,11 @@
 
           <v-text-field
             v-model="password"
+            autocomplete="current-password"
             label="password"
             placeholder="password"
             type="password"
-            :rules="passrules"
+            :rules="passRules"
             solo
             dense
           ></v-text-field>
@@ -28,47 +32,78 @@
             label="password"
             placeholder="password"
             type="password"
-            
+            :rules="passSecRules"
             solo
             dense
           ></v-text-field>
-          <v-btn block large color="success" @click="checkPass">Continue</v-btn>
+          <v-btn block large color="success" @click="registerUser"
+            >Continue</v-btn
+          >
         </v-card-text>
       </v-card>
     </v-container>
 
-    <v-snackbar v-model="snackbar"> Пароли не совпадают </v-snackbar>
+    <v-snackbar v-model="snackbar"> {{ snackbarMessage }}</v-snackbar>
   </v-form>
 </template>
 <script>
+import { User } from "../services/auth.service.js";
+
 export default {
   data: () => ({
+    valid: true,
     login: "",
     password: "",
     checkpass: "",
     snackbar: false,
+    snackbarMessage: "",
 
-    rules: [
+    loginRules: [
+      (value) => !!value || "Required.",
+      (value) => (value || "").length >= 5 || "Min 5 characters",
+      (value) => (value || "").length <= 40 || "Max 40 characters",
+    ],
+    passRules: [
       (value) => !!value || "Required.",
       (value) => (value || "").length <= 40 || "Max 40 characters",
-      (value) => {
-        const pattern =
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return pattern.test(value) || "Invalid e-mail.";
-      },
+      (value) => (value || "").length >= 5 || "Min 5 characters",
     ],
-    passrules: [
+    passSecRules: [
       (value) => !!value || "Required.",
       (value) => (value || "").length <= 40 || "Max 40 characters",
-      (value) => (value || "").length > 5 || "Min 5 characters",
+      (value) => (value || "").length >= 5 || "Min 5 characters",
     ],
-
   }),
   methods: {
-    checkPass() {
-      this.password === this.checkpass
-        ? console.log(true)
-        : (this.snackbar = true);
+    async registerUser() {
+      if (this.password === this.checkpass) {
+        console.log(true);
+      } else {
+        this.snackbar = true;
+        this.snackbarMessage = "Пароли не совпадают";
+        return false;
+      }
+   
+      if (this.$refs.form.validate()) {
+        let data = {
+          login: this.login,
+          password: this.password,
+        };
+
+        let response = await User.signup(data);
+        if (response.err) {
+          this.snackbar = true;
+          this.snackbarMessage = response.err;
+        } else {
+          if (localStorage.getItem("jwt") != null) {
+            if (this.$route.params.nextUrl != null) {
+              this.$router.push(this.$route.params.nextUrl);
+            } else {
+              this.$router.push("/dashboard");
+            }
+          }
+        }
+      }
     },
   },
 };

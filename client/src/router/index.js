@@ -14,7 +14,19 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     meta: { layout: 'Dashboard', requiresAuth: true },
-    component: () => import('../views/Dashboard.vue')
+    component: () => import('../views/Training.vue')
+  },
+  {
+    path: '/weight',
+    name: 'Weight',
+    meta: { layout: 'Dashboard', requiresAuth: true },
+    component: () => import('../views/Weight.vue')
+  },
+  {
+    path: '/training',
+    name: 'Training',
+    meta: { layout: 'Dashboard', requiresAuth: true },
+    component: () => import('../views/Training.vue')
   },
   {
     path: '/login',

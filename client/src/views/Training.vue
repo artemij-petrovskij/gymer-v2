@@ -1,6 +1,14 @@
 <template>
   <v-card>
-    <v-toolbar color="purple" dark prominent>
+    <v-toolbar
+      class="overflow-hidden"
+      color="#6A76AB"
+      dark
+      shrink-on-scroll
+      src="https://picsum.photos/1920/1080?random"
+      gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.1)"
+      fade-img-on-scroll
+    >
       <template v-slot:extension>
         <v-tabs v-model="tabs" centered>
           <v-tab> Notebook</v-tab>
@@ -13,28 +21,74 @@
       <v-tab-item>
         <v-card flat>
           <v-card-text>
-            <v-form>
-              <v-autocomplete
-                :items="exercises"
-                dense
-                solo
-                autofocus
-                cache-items
-                clearable
-                :return-object="obj"
-              ></v-autocomplete>
-              <v-slider
-                v-model="weight"
-                label="weight"
-                thumb-color=""
-                thumb-label="always"
-              ></v-slider>
-              <v-slider
-                v-model="repeats"
-                label="repeats"
-                thumb-color=""
-                thumb-label="always"
-              ></v-slider>
+            <v-simple-table dense>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Exercise</th>
+                    <th class="text-center">Set</th>
+                    <th class="text-center">Repeats</th>
+                    <th class="text-center">Weight</th>
+                    <th class="text-center">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="training in trainings" :key="training.name">
+                    <td class="text-left">{{ training.exercise }}</td>
+                    <td class="text-center">{{ training.set }}</td>
+
+                    <td class="text-center">{{ training.repeats }}</td>
+                    <td class="text-center">{{ training.weight }}</td>
+                    <td class="text-center">{{ training.date }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+            <v-form ref="form">
+              <v-list dense>
+                <v-list-item class="text-h6">
+                  Set - {{ controls.set }} || Максимальный вес:
+                  {{ max.weight }} на {{ max.repeats }} раз(a)
+                </v-list-item>
+              </v-list>
+              <v-list three-line>
+                <v-list-item>
+                  <v-autocomplete
+                    v-model="controls.exercise"
+                    :items="exercises"
+                    :rules="rules"
+                    @change="maxSet()"
+                    dense
+                    solo
+                    autofocus
+                    cache-items
+                    clearable
+                  ></v-autocomplete>
+                </v-list-item>
+                <v-list-item>
+                  <v-slider
+                    v-model="controls.weight"
+                    label="Weight"
+                    thumb-color=""
+                    thumb-label="always"
+                  ></v-slider>
+                </v-list-item>
+                <v-list-item>
+                  <v-slider
+                    v-model="controls.repeats"
+                    label="Repeats"
+                    thumb-color=""
+                    thumb-label="always"
+                  ></v-slider>
+                </v-list-item>
+
+                <v-btn-toggle large>
+                  <v-btn style="width: 50%" @click="nextExercise()">
+                    Finish Set</v-btn
+                  >
+                  <v-btn style="width: 50%" @click="nextSet()"> New Set </v-btn>
+                </v-btn-toggle>
+              </v-list>
             </v-form>
           </v-card-text>
         </v-card>
@@ -42,13 +96,14 @@
       <v-tab-item>
         <v-card flat>
           <v-card-text>
-            <v-simple-table dense>
+            <v-simple-table dense max-width="100%">
               <template v-slot:default>
                 <thead>
                   <tr>
                     <th class="text-left">Exercise</th>
-                    <th class="text-center">Repeats</th>
                     <th class="text-center">Set</th>
+                    <th class="text-center">Repeats</th>
+
                     <th class="text-center">Weight</th>
                     <th class="text-center">Date</th>
                   </tr>
@@ -59,8 +114,8 @@
                     :key="training.name"
                   >
                     <td class="text-left">{{ training.exercise }}</td>
-                    <td class="text-center">{{ training.repeats }}</td>
                     <td class="text-center">{{ training.set }}</td>
+                    <td class="text-center">{{ training.repeats }}</td>
                     <td class="text-center">{{ training.weight }}</td>
                     <td class="text-center">{{ training.date }}</td>
                   </tr>
@@ -85,6 +140,8 @@ import { Sportsman } from "../services/training.service.js";
 
 export default {
   data: () => ({
+    trainings: [],
+    trainings_archive: [],
     exercises: [
       "Выпады с гантелями",
       "Гильотина",
@@ -124,14 +181,69 @@ export default {
       "Тяга штанги на прямых ногах",
       "Французкий жим",
     ],
-    trainings: [],
-    trainings_archive: [],
+    rules: [(value) => !!value || "Required."],
+    controls: {
+      set: 1,
+      exercise: "",
+      weight: 0,
+      repeats: 0,
+    },
+    max: {
+      set: 0,
+      exercise: 0,
+      weight: 0,
+      repeats: 0,
+    },
+
     weight: "",
     login: localStorage.getItem("login"),
     tabs: null,
     obj: "",
   }),
-  methods: {},
+  methods: {
+    async nextSet() {
+      if (this.$refs.form.validate()) {
+        await this.sendData();
+
+        this.controls.set++;
+        this.controls.repeats = 0;
+        await this.maxSet();
+      }
+    },
+    async nextExercise() {
+      this.controls.set = 1;
+      this.controls.weight = 0;
+      this.controls.repeats = 0;
+      this.controls.exercise = "";
+    },
+    async sendData() {
+      let response = await Sportsman.addSet({
+        jwt: localStorage.getItem("jwt"),
+        set: this.controls.set,
+        exercise: this.controls.exercise,
+        weight: this.controls.weight,
+        repeats: this.controls.repeats,
+      });
+      this.trainings = response;
+    },
+    async maxSet() {
+      let response = await Sportsman.maxSet({
+        jwt: localStorage.getItem("jwt"),
+        exercise: this.controls.exercise,
+      });
+      this.max.exercise = response.exercise;
+      this.max.weight = response.weight;
+      this.max.set = response.set;
+      this.max.repeats = response.repeats;
+
+      if (response.weight) {
+        this.exercise_exist = true;
+      } else {
+        this.exercise_exist = false;
+      }
+    },
+  },
+
   async created() {
     let response = await Sportsman.allTrainings({
       jwt: localStorage.getItem("jwt"),
@@ -152,3 +264,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-btn-toggle {
+  width: 100% !important;
+}
+</style>

@@ -24,7 +24,7 @@
       <v-list>
         <v-list-item to="training">
           <v-list-item-icon>
-            <v-icon>x</v-icon>
+            <v-icon></v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -34,7 +34,7 @@
 
         <v-list-item to="weight">
           <v-list-item-icon>
-            <v-icon>x</v-icon>
+            <v-icon></v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>

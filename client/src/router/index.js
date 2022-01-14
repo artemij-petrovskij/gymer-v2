@@ -23,6 +23,12 @@ const routes = [
     component: () => import('../views/Weight.vue')
   },
   {
+    path: '/settings',
+    name: 'settings',
+    meta: { layout: 'Dashboard', requiresAuth: true },
+    component: () => import('../views/Settings.vue')
+  },
+  {
     path: '/training',
     name: 'Training',
     meta: { layout: 'Dashboard', requiresAuth: true },

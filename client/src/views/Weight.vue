@@ -1,3 +1,4 @@
 <template>
-    <a href="">WWW</a>
+<div class="h6">Контроль веса</div>
+    
 </template>

@@ -11,8 +11,8 @@
     >
       <template v-slot:extension>
         <v-tabs v-model="tabs" centered>
-          <v-tab> Notebook</v-tab>
-          <v-tab> Archive</v-tab>
+          <v-tab> Дневник</v-tab>
+          <v-tab> Архив</v-tab>
         </v-tabs>
       </template>
     </v-toolbar>
@@ -25,11 +25,11 @@
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th class="text-left">Exercise</th>
-                    <th class="text-center">Set</th>
-                    <th class="text-center">Repeats</th>
-                    <th class="text-center">Weight</th>
-                    <th class="text-center">Date</th>
+                    <th class="text-left">Упражнение</th>
+                    <th class="text-center">Подход</th>
+                    <th class="text-center">Повторения</th>
+                    <th class="text-center">Вес</th>
+                    <th class="text-center">Дата</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -47,8 +47,10 @@
             <v-form ref="form">
               <v-list dense>
                 <v-list-item class="text-h6">
-                  Set - {{ controls.set }} || Максимальный вес:
-                  {{ max.weight }} на {{ max.repeats }} раз(a)
+                  Подход - {{ controls.set }}
+                </v-list-item>
+                <v-list-item class="text" v-show="maxset">
+                  Максимальный вес: {{ max.weight }} на {{ max.repeats }} раз(а)
                 </v-list-item>
               </v-list>
               <v-list three-line>
@@ -68,7 +70,7 @@
                 <v-list-item>
                   <v-slider
                     v-model="controls.weight"
-                    label="Weight"
+                    label="Вес"
                     thumb-color=""
                     thumb-label="always"
                   ></v-slider>
@@ -76,17 +78,20 @@
                 <v-list-item>
                   <v-slider
                     v-model="controls.repeats"
-                    label="Repeats"
+                    label="Повторения"
                     thumb-color=""
                     thumb-label="always"
+                    max="50"
                   ></v-slider>
                 </v-list-item>
 
                 <v-btn-toggle large>
                   <v-btn style="width: 50%" @click="nextExercise()">
-                    Finish Set</v-btn
+                    Закончить подход</v-btn
                   >
-                  <v-btn style="width: 50%" @click="nextSet()"> New Set </v-btn>
+                  <v-btn style="width: 50%" @click="nextSet()">
+                    Новое Упражнение
+                  </v-btn>
                 </v-btn-toggle>
               </v-list>
             </v-form>
@@ -100,12 +105,12 @@
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th class="text-left">Exercise</th>
-                    <th class="text-center">Set</th>
-                    <th class="text-center">Repeats</th>
+                    <th class="text-left">Упражнение</th>
+                    <th class="text-center">Подход</th>
+                    <th class="text-center">Повторения</th>
 
-                    <th class="text-center">Weight</th>
-                    <th class="text-center">Date</th>
+                    <th class="text-center">Вес</th>
+                    <th class="text-center">Дата</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -181,7 +186,8 @@ export default {
       "Тяга штанги на прямых ногах",
       "Французкий жим",
     ],
-    rules: [(value) => !!value || "Required."],
+    rules: [(value) => !!value || "Обязательное поле."],
+    maxset: false,
     controls: {
       set: 1,
       exercise: "",
@@ -238,8 +244,10 @@ export default {
 
       if (response.weight) {
         this.exercise_exist = true;
+        this.maxset = true;
       } else {
         this.exercise_exist = false;
+        this.maxset = false;
       }
     },
   },
@@ -249,7 +257,7 @@ export default {
       jwt: localStorage.getItem("jwt"),
     });
     if (response.err) {
-      this.$router.push("/login");
+      console.log("Empty training list");
     } else {
       this.trainings = response;
     }
@@ -257,7 +265,7 @@ export default {
       jwt: localStorage.getItem("jwt"),
     });
     if (response_archive.err) {
-      this.$router.push("/login");
+      console.log("Empty arcgive list");
     } else {
       this.trainings_archive = response_archive.reverse();
     }

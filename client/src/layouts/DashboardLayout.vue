@@ -28,17 +28,27 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Training</v-list-item-title>
+            <v-list-item-title>Тренировка</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item to="weight">
+        <!-- <v-list-item to="weight">
           <v-list-item-icon>
             <v-icon></v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Weight</v-list-item-title>
+            <v-list-item-title>Контроль веса</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item> -->
+
+        <v-list-item to="settings">
+          <v-list-item-icon>
+            <v-icon></v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>Настройки</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>

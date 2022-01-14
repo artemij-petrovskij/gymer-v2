@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d221fb8"],{cd56:function(n,t,e){"use strict";e.r(t);var a=function(){var n=this,t=n.$createElement,e=n._self._c||t;return e("v-img",{attrs:{src:"https://pngimg.com/uploads/powerlifting/powerlifting_PNG47.png","max-height":"400",contain:""}})},o=[],c={name:"Home",components:{}},i=c,p=e("2877"),s=e("6544"),l=e.n(s),r=e("adda"),u=Object(p["a"])(i,a,o,!1,null,null,null);t["default"]=u.exports;l()(u,{VImg:r["a"]})}}]);
-//# sourceMappingURL=chunk-2d221fb8.4963d85d.js.map

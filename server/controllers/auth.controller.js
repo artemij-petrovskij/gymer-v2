@@ -38,7 +38,7 @@ module.exports.signup = async (req, res) => {
 
         jwt.sign({
             login: req.body.login
-        }, 'secret', (err, token) => {
+        }, process.env.ACCESS_TOKEN_SECRET, (err, token) => {
             res.json({ token })
 
         })

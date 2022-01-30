@@ -5,16 +5,16 @@
         <v-row align="center" justify="center">
           <v-col cols="12">
             <div
-              class="transition-swing text-h2 pt-4 pb-5 "
+              class="transition-swing text-h2 pt-4 pb-5"
               style="text-align: center !important"
             >
               Gymer Lite
             </div>
           </v-col>
-          <v-btn-toggle rounded>
+          <v-btn-toggle shaped mandatory color="secondary">
             <v-btn class="auth" to="/"> Главная </v-btn>
-            <v-btn class="auth" to="/login"> Логин </v-btn>
-            <v-btn class="auth" to="/signup"> Вход </v-btn>
+            <v-btn class="auth" to="/login"> Войти </v-btn>
+            <v-btn class="auth" to="/signup"> Регистрация </v-btn>
           </v-btn-toggle>
         </v-row>
       </v-card-text>
@@ -39,7 +39,10 @@
         ></path>
       </svg>
 
-      <v-icon large> </v-icon><a href="https://github.com/artemij-petrovskij/gymer-v2" target="_blank">GYMER LITE</a>
+      <v-icon large> </v-icon
+      ><a href="https://github.com/artemij-petrovskij/gymer-v2" target="_blank"
+        >GYMER LITE</a
+      >
     </v-footer>
   </v-app>
 </template>
@@ -49,7 +52,7 @@
   margin: 0 auto;
   background-color: #fff !important;
 }
-.auth{
-  width:100px;
+.auth {
+  width: 140px;
 }
 </style>

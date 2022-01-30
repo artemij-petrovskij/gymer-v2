@@ -3,7 +3,7 @@
     <v-btn color="error" dark @click.stop="dialog = true"> Выход </v-btn>
     <v-dialog v-model="dialog" max-width="400">
       <v-card>
-        <v-card-title class="text-h5">
+        <v-card-title class="text-h6">
           Действительно хотите выйти?
         </v-card-title>
 

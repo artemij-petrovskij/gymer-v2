@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-system-bar app>
+    <!-- <v-system-bar app>
       <v-spacer></v-spacer>
 
       <v-icon>mdi-square</v-icon>
@@ -8,7 +8,7 @@
       <v-icon>mdi-circle</v-icon>
 
       <v-icon>mdi-triangle</v-icon>
-    </v-system-bar>
+    </v-system-bar> -->
 
     <v-navigation-drawer v-model="drawer" app>
       <v-sheet color="deep-purple lighten-5" class="pa-4">
@@ -55,7 +55,7 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-container class="py-8 px-6" fluid>
+      <v-container fluid>
         <router-view></router-view>
       </v-container>
     </v-main>

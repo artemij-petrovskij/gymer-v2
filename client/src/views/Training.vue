@@ -5,7 +5,7 @@
       color="#6A76AB"
       dark
       shrink-on-scroll
-      src="https://picsum.photos/1920/1080?random"
+      src="https://picsum.photos/1000/300?random"
       gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.1)"
       fade-img-on-scroll
     >
@@ -45,11 +45,11 @@
               </template>
             </v-simple-table>
             <v-form ref="form">
-              <v-list dense>
+              <v-list dense v-show="maxsetVisible">
                 <v-list-item class="text-h6">
                   Подход - {{ controls.set }}
                 </v-list-item>
-                <v-list-item class="text" v-show="maxset">
+                <v-list-item class="text">
                   Максимальный вес: {{ max.weight }} на {{ max.repeats }} раз(а)
                 </v-list-item>
               </v-list>
@@ -57,7 +57,7 @@
                 <v-list-item>
                   <v-autocomplete
                     v-model="controls.exercise"
-                    :items="exercises"
+                    :items="exercisesArray"
                     :rules="rules"
                     @change="maxSet()"
                     dense
@@ -81,16 +81,21 @@
                     label="Повторения"
                     thumb-color=""
                     thumb-label="always"
-                    max="50"
+                    max="40"
                   ></v-slider>
                 </v-list-item>
 
                 <v-btn-toggle large>
-                  <v-btn style="width: 50%" @click="nextExercise()">
-                    Закончить подход</v-btn
+                  <v-btn
+                    style="width: 50%"
+                    fab
+                    color="red"
+                    @click="nextExercise()"
                   >
-                  <v-btn style="width: 50%" @click="nextSet()">
-                    Новое Упражнение
+                    след. упражнение</v-btn
+                  >
+                  <v-btn style="width: 50%" color="green" @click="nextSet()">
+                    след. подход
                   </v-btn>
                 </v-btn-toggle>
               </v-list>
@@ -147,12 +152,13 @@ export default {
   data: () => ({
     trainings: [],
     trainings_archive: [],
-    exercises: [
+    exercisesArray: [
       "Выпады с гантелями",
       "Гильотина",
       "Отжимания на брусьях",
+      "Отжимания на брусьях с наклоном",
       "Гиперэкстензии",
-      "Дэнчик (плечи)",
+      "Горизонтальная протяжка",
       "Жим гантелей лежа на горизонтальной скамье",
       "Жим гантелей лежа на наклонной скамье",
       "Жим гантелей стоя",
@@ -164,13 +170,16 @@ export default {
       "Жим штанги сидя",
       "Жим штанги стоя",
       "Сведение и разведение рук (бабочка)",
+      "3D Кроссовер (Кавальер)",
       "Кроссоверы на верхних блоках",
       "Кроссоверы на средних блоках",
       "Подтягивания обратным хватом",
       "Подтягивания",
-      "Предплечья",
+      "Подъем гантели на предплечья",
+      "Подъем штанги на предплечья",
       "Подъем штанги на бицепс (Cкотт)",
       "Подъем штанги на бицепс обратным хватом",
+      "Пуловер на верхнем блоке (Кавальер)",
       "Гакк приседания",
       "Подъем штанги на бицепс",
       "Подъемы гантелей (махи) через стороны вверх",
@@ -182,12 +191,14 @@ export default {
       "Разгибание ног в тренажере",
       "Разгибания рук на верхнем блоке",
       "Становая тяга",
+      "Становая тяга с широкой постановкой ног (Сумо)",
       "Тяга гантели одной рукой стоя в наклоне",
-      "Тяга штанги на прямых ногах",
+      "Тяга штанги к поясу в наклоне",
+      "Тяга штанги на прямых ногах (Румынская тяга)",
       "Французкий жим",
     ],
     rules: [(value) => !!value || "Обязательное поле."],
-    maxset: false,
+    maxsetVisible: false,
     controls: {
       set: 1,
       exercise: "",
@@ -209,10 +220,9 @@ export default {
   methods: {
     async nextSet() {
       if (this.$refs.form.validate()) {
-        await this.sendData();
-
         this.controls.set++;
         this.controls.repeats = 0;
+        await this.sendData();
         await this.maxSet();
       }
     },
@@ -237,17 +247,15 @@ export default {
         jwt: localStorage.getItem("jwt"),
         exercise: this.controls.exercise,
       });
-      this.max.exercise = response.exercise;
-      this.max.weight = response.weight;
-      this.max.set = response.set;
-      this.max.repeats = response.repeats;
 
-      if (response.weight) {
-        this.exercise_exist = true;
-        this.maxset = true;
+      if ("date" in response) {
+        this.max.exercise = response.exercise;
+        this.max.weight = response.weight;
+        this.max.set = response.set;
+        this.max.repeats = response.repeats;
+        this.maxsetVisible = true;
       } else {
-        this.exercise_exist = false;
-        this.maxset = false;
+        this.maxsetVisible = false;
       }
     },
   },
@@ -261,11 +269,12 @@ export default {
     } else {
       this.trainings = response;
     }
+
     let response_archive = await Sportsman.Archive({
       jwt: localStorage.getItem("jwt"),
     });
     if (response_archive.err) {
-      console.log("Empty arcgive list");
+      console.log("Empty archive list");
     } else {
       this.trainings_archive = response_archive.reverse();
     }
@@ -276,5 +285,22 @@ export default {
 <style scoped>
 .v-btn-toggle {
   width: 100% !important;
+}
+.v-btn {
+  font-size: 0.8rem;
+  color: #fff !important;
+}
+.v-card__text {
+  background: linear-gradient(90deg, #ebeaea, #ffffff);
+}
+
+/* .v-list.v-sheet.theme--light.v-list--three-line {
+  background-color: transparent !important;
+} */
+.v-tab {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50;
+}
+.v-tab v-tab--active {
 }
 </style>

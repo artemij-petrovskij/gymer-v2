@@ -1,15 +1,15 @@
 <template>
   <v-form ref="form" v-model="valid" lazy-validation autocomplete="on">
     <v-container>
-      <v-card class="mx-auto" max-width="344" outlined>
+      <v-card class="mx-auto" max-width="400" outlined elevation="8">
         <v-card-text>
           <v-text-field
             v-model="login"
             autocapitalize="off"
             autocorrect="off"
             autocomplete="username"
-            label="Login"
-            placeholder="Login"
+            label="Укажите Логин"
+            placeholder="Укажите Логин"
             :rules="loginRules"
             solo
             dense
@@ -19,8 +19,8 @@
           <v-text-field
             v-model="password"
             autocomplete="current-password"
-            label="password"
-            placeholder="password"
+            label="Введите пароль"
+            placeholder="Введите пароль"
             type="password"
             :rules="passRules"
             solo
@@ -29,15 +29,16 @@
 
           <v-text-field
             v-model="checkpass"
-            label="password"
-            placeholder="password"
+            autocomplete="check-pass"
+            label="Повторите пароль"
+            placeholder="Повторите пароль"
             type="password"
             :rules="passSecRules"
             solo
             dense
           ></v-text-field>
           <v-btn block large color="success" @click="registerUser"
-            >Continue</v-btn
+            >Продолжить</v-btn
           >
         </v-card-text>
       </v-card>
@@ -59,19 +60,19 @@ export default {
     snackbarMessage: "",
 
     loginRules: [
-      (value) => !!value || "Required.",
-      (value) => (value || "").length >= 5 || "Min 5 characters",
-      (value) => (value || "").length <= 40 || "Max 40 characters",
+      (value) => !!value || "Обязательное поле",
+      (value) => (value || "").length >= 5 || "Минимум 5 символов",
+      (value) => (value || "").length <= 40 || "Максимум 40 символов",
     ],
     passRules: [
-      (value) => !!value || "Required.",
-      (value) => (value || "").length <= 40 || "Max 40 characters",
-      (value) => (value || "").length >= 5 || "Min 5 characters",
+      (value) => !!value || "Обязательное поле",
+      (value) => (value || "").length <= 40 || "Максимум 40 символов",
+      (value) => (value || "").length >= 5 || "Минимум 5 символов",
     ],
     passSecRules: [
-      (value) => !!value || "Required.",
-      (value) => (value || "").length <= 40 || "Max 40 characters",
-      (value) => (value || "").length >= 5 || "Min 5 characters",
+      (value) => !!value || "Обязательное поле",
+      (value) => (value || "").length <= 40 || "Максимум 40 символов",
+      (value) => (value || "").length >= 5 || "Минимум 5 символов",
     ],
   }),
   methods: {
@@ -83,7 +84,7 @@ export default {
         this.snackbarMessage = "Пароли не совпадают";
         return false;
       }
-   
+
       if (this.$refs.form.validate()) {
         let data = {
           login: this.login,
@@ -108,11 +109,11 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.v-text-field {
-  margin-bottom: 30px;
-}
+<style lang="css" scoped>
 .v-input__slot {
   background-color: #fafbfc !important;
+}
+.v-card {
+  background: linear-gradient(90deg, #ebeaea, #ffffff);
 }
 </style>

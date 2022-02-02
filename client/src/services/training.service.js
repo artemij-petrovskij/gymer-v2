@@ -81,7 +81,7 @@ class Sportsman {
             if (response.status === 201) {
                 return response.json()
             } else {
-                return { err: 'Server error' }
+                return { err: true }
             }
         } catch (err) {
             console.error(err);

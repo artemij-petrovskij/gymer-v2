@@ -62,12 +62,8 @@ module.exports.addSet = async (req, res) => {
 
         }
     }
-    if (today_training.length == 0) {
-        res.status(404).json({ err: 'err' });
-    } else {
-        res.status(201).json(today_training);
+    res.status(201).json(today_training);
 
-    }
 
 }
 
@@ -92,7 +88,7 @@ module.exports.maxSet = async (req, res) => {
         const best_set = today_training.reduce((acc, curr) => acc.weight > curr.weight ? acc : curr)
         res.status(201).json(best_set);
     } else {
-        res.status(404).json({ err: 'err' })
+        res.status(404).json({ err: 'Max set does not exist' })
     }
 
 }

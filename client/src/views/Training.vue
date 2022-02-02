@@ -59,7 +59,7 @@
                     v-model="controls.exercise"
                     :items="exercisesArray"
                     :rules="rules"
-                    @change="maxSet()"
+                    @change="loadMaxSet()"
                     dense
                     solo
                     autofocus
@@ -218,12 +218,24 @@ export default {
     obj: "",
   }),
   methods: {
+    async loadTodayTrainings() {
+      let response = await Sportsman.allTrainings({
+        jwt: localStorage.getItem("jwt"),
+      });
+      if (response.err) {
+        console.log("Empty training list");
+      } else {
+        this.trainings = response;
+      }
+    },
+
     async nextSet() {
       if (this.$refs.form.validate()) {
+        await this.sendData();
+        await this.loadMaxSet();
+        await this.loadArchiveTraining();
         this.controls.set++;
         this.controls.repeats = 0;
-        await this.sendData();
-        await this.maxSet();
       }
     },
     async nextExercise() {
@@ -242,13 +254,12 @@ export default {
       });
       this.trainings = response;
     },
-    async maxSet() {
+    async loadMaxSet() {
       let response = await Sportsman.maxSet({
         jwt: localStorage.getItem("jwt"),
         exercise: this.controls.exercise,
       });
-
-      if ("date" in response) {
+      if (!response.err) {
         this.max.exercise = response.exercise;
         this.max.weight = response.weight;
         this.max.set = response.set;
@@ -258,26 +269,21 @@ export default {
         this.maxsetVisible = false;
       }
     },
+    async loadArchiveTraining() {
+      let response_archive = await Sportsman.Archive({
+        jwt: localStorage.getItem("jwt"),
+      });
+      if (response_archive.err) {
+        console.log("Empty archive list");
+      } else {
+        this.trainings_archive = response_archive.reverse();
+      }
+    },
   },
 
   async created() {
-    let response = await Sportsman.allTrainings({
-      jwt: localStorage.getItem("jwt"),
-    });
-    if (response.err) {
-      console.log("Empty training list");
-    } else {
-      this.trainings = response;
-    }
-
-    let response_archive = await Sportsman.Archive({
-      jwt: localStorage.getItem("jwt"),
-    });
-    if (response_archive.err) {
-      console.log("Empty archive list");
-    } else {
-      this.trainings_archive = response_archive.reverse();
-    }
+    await this.loadArchiveTraining();
+    await this.loadTodayTrainings();
   },
 };
 </script>
